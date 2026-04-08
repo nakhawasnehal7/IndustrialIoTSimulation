@@ -50,6 +50,6 @@ if pred_count > 0:
     print("\nSample predictions:")
     print(pred_sample)
 else:
-    print("⚠️ No predictions yet! Run training script to generate predictions.")
+    print("No predictions yet! Run training script to generate predictions.")
 
 conn.close()
