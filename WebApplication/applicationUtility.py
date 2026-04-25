@@ -1,7 +1,6 @@
 import os
 import sqlite3
-from turtle import st
-
+import streamlit as st
 import joblib
 import pandas as pd
 
@@ -9,19 +8,22 @@ DB_PATH = '../data/iot_maintenance.db'
 MODELS_PATH = '../models/'
 
 
+@st.cache_resource
+def load_models(model_paths=None, ):
+    """Load trained ML models"""
+    try:
+        rf_model = joblib.load(os.path.join(MODELS_PATH, 'random_forest_model.pkl'))
+        iso_forest = joblib.load(os.path.join(MODELS_PATH, 'isolation_forest_model.pkl'))
+        scaler = joblib.load(os.path.join(MODELS_PATH, 'scaler.pkl'))
+        return rf_model, iso_forest, scaler
+    except Exception as e:
+        st.error(f" Error loading models: {e}")
+        st.info("Please run the training script first: `python complete_workflow.py`")
+        return None, None, None
+
 class ApplicationUtility:
 
-    def load_models(model_paths=None, ):
-        """Load trained ML models"""
-        try:
-            rf_model = joblib.load(os.path.join(MODELS_PATH, 'random_forest_model.pkl'))
-            iso_forest = joblib.load(os.path.join(MODELS_PATH, 'isolation_forest_model.pkl'))
-            scaler = joblib.load(os.path.join(MODELS_PATH, 'scaler.pkl'))
-            return rf_model, iso_forest, scaler
-        except Exception as e:
-            st.error(f" Error loading models: {e}")
-            st.info("Please run the training script first: `python complete_workflow.py`")
-            return None, None, None
+
 
     def get_db_connection(Db=None):
 

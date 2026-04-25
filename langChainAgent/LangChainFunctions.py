@@ -12,7 +12,9 @@ def get_db_connection(self):
 class LangChainFunctions:
 
     def get_health_status(query: str = "") -> str:
-        """Get current machine health status and statistics"""
+        """
+        Get current machine health status and statistics
+        """
         try:
             conn = get_db_connection(self=None)
             summary_query = """
@@ -47,7 +49,9 @@ class LangChainFunctions:
             return f"Error retrieving status: {str(e)}"
 
     def get_high_risk_machine(query: str = "") -> str:
-        """Get list of machines with high risk or critical status"""
+        """
+        Get list of machines with high risk or critical status
+        """
         try:
             conn = get_db_connection()
             query_sql = """
@@ -88,7 +92,9 @@ class LangChainFunctions:
             return f"Error retrieving high risk machines: {str(e)}"
 
     def get_anomaly_report(query: str = "") -> str:
-        """Get recent anomaly detections"""
+        """
+        Get recent anomaly detections
+        """
         try:
             conn = get_db_connection()
             query_sql = """
@@ -216,4 +222,3 @@ class LangChainFunctions:
             return result.strip()
         except Exception as e:
             return f"Error getting sensor trends: {str(e)}"
-

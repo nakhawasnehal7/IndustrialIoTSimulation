@@ -2,10 +2,11 @@ from datetime import datetime
 
 import pandas as pd
 
-from applicationUtility import ApplicationUtility
+from applicationUtility import ApplicationUtility, load_models
 
 
 class PredictionFunction:
+    @staticmethod
     def calculate_health_score(vibration, temperature, pressure, fault_prob, anomaly_score):
         """
         Calculate machine health score
@@ -29,6 +30,7 @@ class PredictionFunction:
         )
         return max(0, min(100, health_score))
 
+    @staticmethod
     def make_prediction(vibration, temperature, pressure, rms_vibration, mean_temp):
         """
         Make real-time prediction
@@ -39,14 +41,15 @@ class PredictionFunction:
         :return: array of the prediction
         """
 
-        rf_model, iso_forest, scaler = ApplicationUtility.load_models()
+        rf_model, iso_forest, scaler = load_models()
 
         if rf_model is None or iso_forest is None or scaler is None:
             return None
-
-        # Prepare input
+        print("Snehal make_predictionmake_predictionmake_predictionmake_predictionmake_predictionmake_predictionmake_predictionmake_predictionmake_predictionmake_predictionmake_predictionmake_prediction")
+        #Prepare input
+        #try:
         input_data = pd.DataFrame([[vibration, temperature, pressure, rms_vibration, mean_temp]],
-                                  columns=['vibration', 'temperature', 'pressure', 'rms_vibration', 'mean_temp'])
+                                      columns=['vibration', 'temperature', 'pressure', 'rms_vibration', 'mean_temp'])
 
         # Scale features
         input_scaled = scaler.transform(input_data)
@@ -62,12 +65,17 @@ class PredictionFunction:
         # Calculate health score
         max_fault_prob = max(fault_proba[1], fault_proba[2]) if len(fault_proba) > 2 else fault_proba[1]
         health_score = PredictionFunction.calculate_health_score(vibration, temperature, pressure, max_fault_prob,
-                                                                 anomaly_score)
+                                                                     anomaly_score)
         risk_level = ApplicationUtility.classify_risk(health_score)
+        # except Exception as e:
+        #     # st.error(f"❌ Failed at step above: {type(e).__name__}: {e}")
+        #     import traceback
+        #     # st.code(traceback.format_exc())
+        #     return None
 
         return {
             'fault_prediction': int(fault_pred),
-            'fault_label': ['Normal', 'Fault', 'Critical'][int(fault_pred)] if fault_pred < 3 else 'Unknown',
+            'fault_label': ['Normal', 'Fault', 'Critical'][int(fault_pred)] if int(fault_pred) < 3 else 'Unknown',
             'fault_probability': {
                 'normal': float(fault_proba[0]),
                 'fault': float(fault_proba[1]) if len(fault_proba) > 1 else 0.0,
@@ -79,6 +87,7 @@ class PredictionFunction:
             'risk_classification': risk_level
         }
 
+    @staticmethod
     def save_prediction_to_db(sensor_data, prediction, machine_id='MACHINE_001'):
         """
         Save the prediction data
