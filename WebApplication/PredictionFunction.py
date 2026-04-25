@@ -9,10 +9,10 @@ class PredictionFunction:
     def calculate_health_score(vibration, temperature, pressure, fault_prob, anomaly_score):
         """
         Calculate machine health score
-        :param temperature:
-        :param pressure:
-        :param fault_prob:
-        :param anomaly_score:
+        :param temperature: measure the temperature value : float
+        :param pressure: pressure value : float
+        :param fault_prob: fault probability 1 or 0
+        :param anomaly_score: binary value 0 or 1
         :return:
         """
 
@@ -32,11 +32,11 @@ class PredictionFunction:
     def make_prediction(vibration, temperature, pressure, rms_vibration, mean_temp):
         """
         Make real-time prediction
-        :param temperature:
-        :param pressure:
-        :param rms_vibration:
-        :param mean_temp:
-        :return:
+        :param temperature: measure the temperature value : float
+        :param pressure: pressure value : float
+        :param rms_vibration: rms vibration : float
+        :param mean_temp: f mean temperature float value
+        :return: array of the prediction
         """
 
         rf_model, iso_forest, scaler = ApplicationUtility.load_models()
@@ -80,7 +80,12 @@ class PredictionFunction:
         }
 
     def save_prediction_to_db(sensor_data, prediction, machine_id='MACHINE_001'):
-        """Save prediction to database"""
+        """
+        Save the prediction data
+        :param prediction:  prediction values
+        :param machine_id:  Machine ID
+        :return:
+        """
         conn = ApplicationUtility.get_db_connection()
         if conn is None:
             return False

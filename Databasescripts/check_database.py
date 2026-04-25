@@ -47,7 +47,7 @@ print(f"Total rows in predictions: {pred_count}")
 
 if pred_count > 0:
     pred_sample = pd.read_sql_query("SELECT * FROM predictions LIMIT 5", conn)
-    print("\nSample predictions:")
+    print("Sample predictions:")
     print(pred_sample)
 else:
     print("No predictions yet! Run training script to generate predictions.")

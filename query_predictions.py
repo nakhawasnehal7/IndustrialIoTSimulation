@@ -3,7 +3,6 @@ import pandas as pd
 
 conn = sqlite3.connect('data/iot_maintenance.db')
 
-# 1. Get all high-risk predictions
 print("\n1. HIGH RISK PREDICTIONS:")
 high_risk = pd.read_sql_query("""
     SELECT 
@@ -19,7 +18,6 @@ high_risk = pd.read_sql_query("""
 """, conn)
 print(high_risk)
 
-# 2. Get anomaly detections
 print("\n2. ANOMALY DETECTIONS:")
 anomalies = pd.read_sql_query("""
     SELECT 
@@ -36,7 +34,6 @@ anomalies = pd.read_sql_query("""
 """, conn)
 print(anomalies)
 
-# 3. Risk distribution
 print("\n3. RISK DISTRIBUTION:")
 risk_dist = pd.read_sql_query("""
     SELECT 

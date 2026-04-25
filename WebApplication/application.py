@@ -1,3 +1,6 @@
+# Author SnehalNakhawa
+# Date: 1st April
+# Description : Its web application module to display the prediction and anomaly detection
 import streamlit as st
 import pandas as pd
 
@@ -7,7 +10,7 @@ from datetime import datetime
 
 from applicationUtility import ApplicationUtility
 from PredictionFunction import PredictionFunction
-
+from agentModule import run_agent_query, is_agent_available, get_agent_status
 # Set page config
 st.set_page_config(
     page_title="IoT Predictive Maintenance Dashboard",
@@ -21,9 +24,8 @@ DB_PATH = '../data/iot_maintenance.db'
 rf_model, iso_forest, scaler = ApplicationUtility.load_models()
 
 
-# ==========================================
+
 # STREAMLIT UI
-# ==========================================
 
 def main():
     # Header
@@ -36,7 +38,7 @@ def main():
 
         page = st.radio(
             "Navigation",
-            ["📊 Dashboard", "🔮 Real-Time Prediction", "📈 Analytics", "⚠️ Alerts"]
+            ["📊 Dashboard", "🔮 Real-Time Prediction", "📈 Analytics", "⚠️ Alerts", "🤖 AI Agent"]
         )
 
         st.markdown("---")
@@ -55,9 +57,9 @@ def main():
         st.markdown("---")
         st.info("💡 Tip: Run training script first if you see errors")
 
-    # ==========================================
+
     # PAGE: DASHBOARD
-    # ==========================================
+
 
     if page == "📊 Dashboard":
         st.header("📊 Machine Health Dashboard")
@@ -157,9 +159,8 @@ def main():
             st.warning("No prediction data available. Please run the training script first:")
             st.code("python complete_workflow.py", language="bash")
 
-    # ==========================================
+
     # PAGE: REAL-TIME PREDICTION
-    # ==========================================
 
     elif page == "Real-Time Prediction":
         st.header("Real-Time Machine Health Prediction")
@@ -182,7 +183,7 @@ def main():
 
         if st.button("Predict Machine Health", type="primary"):
             with st.spinner("Analyzing sensor data..."):
-                prediction = ApplicationUtility.make_prediction(vibration, temperature, pressure, rms_vibration,
+                prediction = PredictionFunction.make_prediction(vibration, temperature, pressure, rms_vibration,
                                                                 mean_temp)
 
                 if prediction:
@@ -264,9 +265,9 @@ def main():
                 else:
                     st.error(" Error making prediction. Please check if models are loaded correctly.")
 
-    # ==========================================
+
     # PAGE: ANALYTICS
-    # ==========================================
+
 
     elif page == " Analytics":
         st.header("Advanced Analytics")
@@ -318,9 +319,9 @@ def main():
         else:
             st.info("No sensor data available for analytics")
 
-    # ==========================================
+
     # PAGE: ALERTS
-    # ==========================================
+
 
     elif page == "Alerts":
         st.header("Maintenance Alerts")
@@ -377,6 +378,57 @@ def main():
                     st.cache_data.clear()
                     st.rerun()
 
+    # PAGE: AI AGENT
 
+    elif page == "🤖 AI Agent":
+        st.header("🤖 AI Maintenance Agent")
+
+        # Show warning if agent failed to load
+        if not is_agent_available():
+            status = get_agent_status()
+            st.error(f"Agent unavailable: {status['error']}")
+            st.code("ollama serve", language="bash")
+            st.stop()
+
+        st.markdown("Ask anything about your machines in plain English.")
+
+        if "chat_history" not in st.session_state:
+            st.session_state.chat_history = []
+        if "agent_busy" not in st.session_state:
+            st.session_state.agent_busy = False
+
+        st.markdown("---")
+
+        for msg in st.session_state.chat_history:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
+
+        if not st.session_state.agent_busy:
+            prompt = st.chat_input("Type your question here...")
+        else:
+            prompt = None
+            st.info("⏳ Agent is processing, please wait...")
+
+        if prompt and not st.session_state.agent_busy:
+            st.session_state.agent_busy = True
+
+            st.session_state.chat_history.append({"role": "user", "content": prompt})
+            with st.chat_message("user"):
+                st.markdown(prompt)
+
+            with st.chat_message("assistant"):
+                with st.spinner("Agent thinking..."):
+                    response = run_agent_query(prompt)
+                st.markdown(response)
+
+            st.session_state.chat_history.append({"role": "assistant", "content": response})
+            st.session_state.agent_busy = False
+
+        if st.session_state.chat_history:
+            st.markdown("---")
+            if st.button("🗑️ Clear Chat"):
+                st.session_state.chat_history = []
+                st.session_state.agent_busy = False
+                st.rerun()
 if __name__ == "__main__":
     main()

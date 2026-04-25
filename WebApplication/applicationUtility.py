@@ -19,7 +19,7 @@ class ApplicationUtility:
             scaler = joblib.load(os.path.join(MODELS_PATH, 'scaler.pkl'))
             return rf_model, iso_forest, scaler
         except Exception as e:
-            st.error(f"⚠️ Error loading models: {e}")
+            st.error(f" Error loading models: {e}")
             st.info("Please run the training script first: `python complete_workflow.py`")
             return None, None, None
 
@@ -27,7 +27,7 @@ class ApplicationUtility:
 
         """Create database connection"""
         if not os.path.exists(DB_PATH):
-            st.error(f"⚠️ Database not found at: {DB_PATH}")
+            st.error(f"Database not found at: {DB_PATH}")
             st.info("Please run the training script first: `python complete_workflow.py`")
             return None
         return sqlite3.connect(DB_PATH)
