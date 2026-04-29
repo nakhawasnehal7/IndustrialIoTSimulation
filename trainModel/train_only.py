@@ -114,7 +114,7 @@ for i in range(len(X_test)):
 
     predictions.append({
         'timestamp': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
-        'machine_id': 'MACHINE_001',
+        'machine_id': f'MACHINE_{(i % 100) + 1:03d}',
         'vibration': float(X_test.iloc[i]['vibration']),
         'temperature': float(X_test.iloc[i]['temperature']),
         'pressure': float(X_test.iloc[i]['pressure']),
