@@ -5,6 +5,12 @@ This project is an IoT based predictive Maintenance System that
 -create and load sensor data into database
 -train machine learning models
 -Runs a Streamlit web application for prediction
+
+In order to run the application locally
+Python Version 3.12
+pip install requirements.txt
+Ollma running locally , install Mistral model
+
 https://github.com/nakhawasnehal7/IndustrialIoTSimulation
 1. 
 Create database script
@@ -20,3 +26,4 @@ it generates the .pkl model files
 The web application displays the data and the predictions
 Run the web application using command: streamlit run application.py
 
+4. To run the project you need to have ollma (Mistral) running locally on the machine 
