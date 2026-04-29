@@ -1,3 +1,6 @@
+# Author rishika
+# Date: 1st April
+# Description : It train the data using RandomForestClassifier and IsolationForest models
 import sqlite3
 import pandas as pd
 import os

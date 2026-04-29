@@ -68,7 +68,7 @@ class PredictionFunction:
                                                                      anomaly_score)
         risk_level = ApplicationUtility.classify_risk(health_score)
         # except Exception as e:
-        #     # st.error(f"❌ Failed at step above: {type(e).__name__}: {e}")
+        #     # st.error(f"Failed at step above: {type(e).__name__}: {e}")
         #     import traceback
         #     # st.code(traceback.format_exc())
         #     return None
