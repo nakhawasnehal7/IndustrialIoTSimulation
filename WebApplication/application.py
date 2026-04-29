@@ -28,11 +28,11 @@ def main():
 
     # Sidebar
     with st.sidebar:
-        st.header("⚙️ Controls")
+        st.header("Controls")
 
         page = st.radio(
             "Navigation",
-            ["📊 Dashboard", "🔮 Real-Time Prediction", "📈 Analytics", "⚠️ Alerts", "🤖 AI Agent"]
+            ["Dashboard", "Real-Time Prediction", "Analytics", "Alerts", "AI Agent"]
         )
         st.write(repr(page))
         st.markdown("---")
@@ -44,33 +44,33 @@ def main():
         st.markdown("---")
 
         # Refresh button
-        if st.button("🔄 Refresh Data"):
+        if st.button("Refresh Data"):
             st.cache_data.clear()
             st.rerun()
 
         st.markdown("---")
-        st.info("💡 Tip: Run training script first if you see errors")
+        st.info("Tip: Run training script first if you see errors")
 
     # PAGE: DASHBOARD
 
-    if page == "📊 Dashboard":
+    if page == "Dashboard":
         showDashboard()
 
     # PAGE: REAL-TIME PREDICTION
-    elif page == "🔮 Real-Time Prediction":
+    elif page == "Real-Time Prediction":
 
         show_prediction()
 
     # PAGE: ANALYTICS
-    elif page == "📈 Analytics":
+    elif page == "Analytics":
         showAnalytics()
 
     # PAGE: ALERTS
-    elif page == "⚠️ Alerts":
+    elif page == "Alerts":
         showAlerts()
     # PAGE: AI AGENT
 
-    elif page == "🤖 AI Agent":
+    elif page == "AI Agent":
         showAIAgent()
 
 
